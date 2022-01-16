@@ -37,18 +37,23 @@ def enter_transaction(connection):
     :return: None
     """
 
-    # Get transaction data
-    date = input("Date (YYYY-MM-DD): ")
-    vendor = input("Vendor: ")
-    category = input("Category: ")
-    amount = float(input("Amount ($): "))
-    notes = input("Additional Notes: ")
-
-    # Insert data into database
+    # Create cursor object
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO expenses (date, vendor, category, amount, notes) VALUES (?,?,?,?,?)",
-                   (date, vendor, category, amount, notes))
+
+    # Continue inserting data for as long as user requires
+    while input("Would you like to enter a transaction?") == "y":
+        # Get transaction data
+        date = input("Date (YYYY-MM-DD): ")
+        vendor = input("Vendor: ")
+        category = input("Category: ")
+        amount = float(input("Amount ($): "))
+        notes = input("Additional Notes: ")
+
+        # Insert data into database
+        cursor.execute("INSERT INTO expenses (date, vendor, category, amount, notes) VALUES (?,?,?,?,?)",
+                       (date, vendor, category, amount, notes))
     connection.commit()
+
     cursor.close()
 
 
