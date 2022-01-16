@@ -30,9 +30,34 @@ def disconnect_from_db(connection):
     print("Connection to sqlite closed")
 
 
+def enter_transaction(connection):
+    """
+    Get transaction data from user and insert it into the database
+    :param connection: connection object that represents the database
+    :return: None
+    """
+
+    # Get transaction data
+    date = input("Date (YYYY-MM-DD): ")
+    vendor = input("Vendor: ")
+    category = input("Category: ")
+    amount = float(input("Amount ($): "))
+    notes = input("Additional Notes: ")
+
+    # Insert data into database
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO expenses (date, vendor, category, amount, notes) VALUES (?,?,?,?,?)",
+                   (date, vendor, category, amount, notes))
+    connection.commit()
+    cursor.close()
+
+
 def main():
     # Connect to database
     connection = connect_to_db()
+
+    # Enter transaction data
+    enter_transaction(connection)
 
     # Disconnect from database
     disconnect_from_db(connection)
