@@ -2,6 +2,17 @@ import pandas as pd
 import sqlite3
 
 
+# Dictionary of supported categories
+categories = {
+    "H": "Housing",
+    "G": "Grocery",
+    "R": "Restaurant",
+    "T": "Transportation",
+    "P": "Personal",
+    "M": "Miscellaneous"
+}
+
+
 def connect_to_db():
     """
     Set up connection to sqlite database
@@ -47,7 +58,7 @@ def enter_transaction(connection):
         # Get transaction data
         date = input("Date (YYYY-MM-DD): ")
         vendor = input("Vendor: ")
-        category = input("Category: ")
+        category = get_category()
         amount = float(input("Amount ($): "))
         notes = input("Additional Notes: ")
 
@@ -74,6 +85,14 @@ def read_csv(connection):
     df.to_sql('expenses', connection, if_exists='append', index=False)
 
     connection.commit()
+
+
+def get_category():
+    category = input("Category: ")
+    while category not in categories:
+        category = input("Invalid category; Enter category: ")
+    else:
+        return categories[category]
 
 
 def main():
