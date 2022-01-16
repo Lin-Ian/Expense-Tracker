@@ -1,3 +1,4 @@
+import pandas as pd
 import sqlite3
 
 
@@ -26,6 +27,7 @@ def disconnect_from_db(connection):
     :param connection: connection object that represents the database
     :return: None
     """
+
     connection.close()
     print("Connection to sqlite closed")
 
@@ -57,12 +59,32 @@ def enter_transaction(connection):
     cursor.close()
 
 
+def read_csv(connection):
+    """
+    Read in a .csv file
+    :param connection: connection object that represents the database
+    :return: None
+    """
+
+    # Get file name from user
+    file_name = input("Enter file name: ")
+    df = pd.read_csv(file_name)
+
+    # Convert dataframe to sql
+    df.to_sql('expenses', connection, if_exists='append', index=False)
+
+    connection.commit()
+
+
 def main():
     # Connect to database
     connection = connect_to_db()
 
     # Enter transaction data
     enter_transaction(connection)
+
+    # Read file
+    read_csv(connection)
 
     # Disconnect from database
     disconnect_from_db(connection)
